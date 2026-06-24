@@ -72,7 +72,7 @@ graph TD
     API -->|3. Queue Background Task| Async[FastAPI Worker]
     API -->|Return audit_id| UI
     
-    UI -->|Poll GET /api/audit/{id}| API
+    UI -->|"Poll GET /api/audit/{id}"| API
     API -->|Fetch Status| DB
     
     Async -->|4. Get Homepage| Web[Target Website / Mock Site]
