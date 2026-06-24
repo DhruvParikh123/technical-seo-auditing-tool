@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zensor Solutions - Technical SEO Audit Hub</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo-area">
+                <div class="logo-icon"><i data-lucide="shield-check"></i></div>
+                <div class="logo-text">
+                    <h1>ZENSOR</h1>
+                    <span>SEO AUDIT SYSTEM</span>
+                </div>
+            </div>
+            <div class="header-tag">Developer Sandbox</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-grid">
+            <!-- Sidebar Controls -->
+            <section class="card control-panel">
+                <div class="card-header">
+                    <i data-lucide="sliders" class="header-icon"></i>
+                    <h2>Configure Audit</h2>
+                </div>
+                
+                <form id="audit-form" class="audit-form">
+                    <div class="input-group">
+                        <label for="site-url">Target Website URL</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="globe" class="input-icon"></i>
+                            <input type="text" id="site-url" placeholder="example.com" required>
+                        </div>
+                        <p class="input-hint">Protocol (https://) will be appended if omitted.</p>
+                    </div>
+                    
+                    <button type="submit" id="start-btn" class="btn btn-primary">
+                        <i data-lucide="search"></i> Run Technical Audit
+                    </button>
+                </form>
+
+                <div class="divider"><span>OR</span></div>
+
+                <div class="mock-sandbox">
+                    <h3>Built-in Local Sandbox</h3>
+                    <p>Test the auditor instantly with Zensor's pre-configured SEO test environment containing multiple rule violations.</p>
+                    <button id="run-mock-btn" class="btn btn-secondary">
+                        <i data-lucide="flask-conical"></i> Run Mock Site Audit
+                    </button>
+                </div>
+            </section>
+
+            <!-- Main Results Area -->
+            <section class="results-panel">
+                <!-- Landing State -->
+                <div id="state-landing" class="panel-state active">
+                    <div class="landing-hero">
+                        <i data-lucide="search-code" class="hero-icon"></i>
+                        <h2>Technical SEO Diagnostics</h2>
+                        <p>Analyze site navigation structures, crawl page linkages, check compliance headers, and inspect key signals. Enter a URL or launch the mock site sandbox to begin.</p>
+                        <div class="capabilities-grid">
+                            <div class="cap-item">
+                                <i data-lucide="compass"></i>
+                                <h4>Navigation Crawl</h4>
+                                <p>Isolates top menu absolute/relative links, avoiding footer, sidebars, and main text body.</p>
+                            </div>
+                            <div class="cap-item">
+                                <i data-lucide="check-square"></i>
+                                <h4>Tag Diagnostics</h4>
+                                <p>Audits Title, Meta Description lengths, H1 tag counts, and Canonical tags.</p>
+                            </div>
+                            <div class="cap-item">
+                                <i data-lucide="eye-off"></i>
+                                <h4>Indexability & Size</h4>
+                                <p>Detects meta noindex tags, X-Robots-Tag headers, status codes, and flags pages > 2MB.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="state-loading" class="panel-state">
+                    <div class="loader-container">
+                        <div class="spinner"></div>
+                        <h2 id="loader-title">Initiating Crawl Job...</h2>
+                        <p id="loader-subtitle">Registering worker thread on target host...</p>
+                        <div class="progress-details">
+                            <div class="status-badge" id="crawler-badge">
+                                <i data-lucide="loader" class="spin-icon"></i> <span id="crawler-status-text">Pending queue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="state-error" class="panel-state">
+                    <div class="error-container">
+                        <i data-lucide="alert-triangle" class="error-icon"></i>
+                        <h2>Audit Execution Failed</h2>
+                        <p id="error-message">The crawler encountered a connection timeout or resolve issue.</p>
+                        <button onclick="resetDashboard()" class="btn btn-secondary">
+                            <i data-lucide="refresh-cw"></i> Try Again
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Report State -->
+                <div id="state-results" class="panel-state">
+                    <!-- Audit Meta Info -->
+                    <div class="results-header">
+                        <div>
+                            <span class="meta-label">AUDIT REPORT FOR</span>
+                            <h2 id="report-url">https://example.com</h2>
+                        </div>
+                        <div class="report-meta">
+                            <div class="meta-item">
+                                <span class="lbl">Audit ID</span>
+                                <span class="val" id="report-id">uuid-goes-here</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="lbl">Date Completed</span>
+                                <span class="val" id="report-date">June 24, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Metrics Row -->
+                    <div class="metrics-row">
+                        <div class="metric-card">
+                            <div class="m-icon blue"><i data-lucide="files"></i></div>
+                            <div class="m-data">
+                                <span class="val" id="metric-crawled">0</span>
+                                <span class="lbl">Pages Crawled</span>
+                            </div>
+                        </div>
+                        <div class="metric-card" id="card-missing-title">
+                            <div class="m-icon"><i data-lucide="type"></i></div>
+                            <div class="m-data">
+                                <span class="val" id="metric-missing-title">0</span>
+                                <span class="lbl">Missing Titles</span>
+                            </div>
+                        </div>
+                        <div class="metric-card" id="card-missing-desc">
+                            <div class="m-icon"><i data-lucide="file-text"></i></div>
+                            <div class="m-data">
+                                <span class="val" id="metric-missing-desc">0</span>
+                                <span class="lbl">Missing Descriptions</span>
+                            </div>
+                        </div>
+                        <div class="metric-card" id="card-multiple-h1">
+                            <div class="m-icon"><i data-lucide="heading"></i></div>
+                            <div class="m-data">
+                                <span class="val" id="metric-multiple-h1">0</span>
+                                <span class="lbl">Multiple H1s</span>
+                            </div>
+                        </div>
+                        <div class="metric-card" id="card-noindex">
+                            <div class="m-icon"><i data-lucide="eye-off"></i></div>
+                            <div class="m-data">
+                                <span class="val" id="metric-noindex">0</span>
+                                <span class="lbl">Noindex Pages</span>
+                            </div>
+                        </div>
+                        <div class="metric-card" id="card-non-200">
+                            <div class="m-icon"><i data-lucide="alert-octagon"></i></div>
+                            <div class="m-data">
+                                <span class="val" id="metric-non-200">0</span>
+                                <span class="lbl">Non-200 Status</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Pages Crawled List -->
+                    <div class="pages-list-section">
+                        <div class="section-title-bar">
+                            <h3>Crawled URL Diagnostics</h3>
+                            <span class="count-badge" id="crawled-pages-badge">0 Pages</span>
+                        </div>
+                        
+                        <div class="pages-list" id="pages-list-container">
+                            <!-- Page rows injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/app.js"></script>
+</body>
+</html>
